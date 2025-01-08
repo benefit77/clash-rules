@@ -1,0 +1,34 @@
+name: Update
+on:
+  workflow_dispatch:
+
+env:
+  TZ: Asia/Shanghai
+
+jobs:
+  Update_Filters:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Purge jsdelivr CDN
+        run: |
+          cd rule || exit 1
+          for file in $(ls); do
+            curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@main/rule/${file}"
+          done
+
+      - name: Delete Workflow Runs
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          repository: ${{ github.repository }}
+          retain_days: 1
+          keep_minimum_runs: 1
