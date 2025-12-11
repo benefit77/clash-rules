@@ -2,3 +2,4 @@ payload:
   - '+.wogg.net'
   - '+.yiso.fun'
   - '+.yiso.work'
+  - '+.91panta.cn'
